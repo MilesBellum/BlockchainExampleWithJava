@@ -10,5 +10,5 @@ Remember, this projects runs with AndroidX and Material Design 2.0. So you will 
 
 Contact
 ----------
-For anything about the project, you can email me at eagb.mb@gmail.com
+For anything about the project, you can email me at eagb.mb@gmail.com .
 You can visit my [website](https://eagb-corp.web.app).
