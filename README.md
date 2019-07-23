@@ -10,7 +10,7 @@ Remember, this project runs with AndroidX and new Material Design. So you will n
 
 Screenshots
 -----------
-The first block (Genesis block) will be inserted always when you open the app.
+The first block (Genesis block) will be inserted whenever you open the app.
 
 ![Genesis_block](screenshots/genesis_block.png "Genesis block")
 
@@ -20,7 +20,7 @@ A hash check of three blocks.
 ![Hash_check](screenshots/hash_check.png "Hash check")
 
 
-You can encrypt the message to insert into blockchain.
+You can encrypt the message to insert it in the Blockchain.
 
 ![Encrypt_message_option](screenshots/encrypt_message_option.png "Encrypt message")
 
