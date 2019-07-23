@@ -1,0 +1,37 @@
+package com.eagb.blockchainexample.managers;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+public class SharedPreferencesManager {
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+    private static final String PREFERENCES_DATA = "eagb.blockchainexample";
+    private static final String ENCRYPTION_STATUS = "encryption_status";
+    private static final String PROOF_OF_WORK = "proof_of_work";
+    public static final int DEFAULT_PROOF_OF_WORK = 2;
+
+    public SharedPreferencesManager(Context context){
+        sharedPreferences = context.getSharedPreferences(PREFERENCES_DATA, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor.apply();
+    }
+
+    public void setEncryptionStatus(boolean isActivated) {
+        editor.putBoolean(ENCRYPTION_STATUS, isActivated);
+        editor.commit();
+    }
+
+    public boolean getEncryptionStatus() {
+        return sharedPreferences.getBoolean(ENCRYPTION_STATUS, false);
+    }
+
+    public void setPowValue(int powValue) {
+        editor.putInt(PROOF_OF_WORK, powValue);
+        editor.commit();
+    }
+
+    public int getPowValue() {
+        return sharedPreferences.getInt(PROOF_OF_WORK, DEFAULT_PROOF_OF_WORK);
+    }
+}
