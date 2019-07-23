@@ -30,7 +30,7 @@ You can set the 'Proof-of-work' to test the app on your device.
 ![Proof_of_work](screenshots/proof_of_work.png "Proof-of-Work")
 
 
-Get more info about this app or the Blockchain.
+Get more info about this app and the Blockchain.
 
 ![More_info](screenshots/more_info.png "More info")
 
