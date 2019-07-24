@@ -6,13 +6,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     tools:context=".fragments.PowFragment"
-    android:layout_gravity="center"
-    android:padding="@dimen/content_padding">
+    android:background="@android:color/white"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="@dimen/content_margin">
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -26,7 +27,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/vertical_margin"
+            android:layout_marginBottom="@dimen/vertical_content_margin"
             android:orientation="vertical">
 
             <TextView
@@ -39,7 +40,7 @@
                 android:textAlignment="center"
                 android:textSize="@dimen/title_text_size"
                 android:layout_marginTop="@dimen/vertical_title_margin"
-                android:layout_marginBottom="@dimen/vertical_margin" />
+                android:layout_marginBottom="@dimen/vertical_content_margin" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -73,7 +74,7 @@
                 android:textSize="@dimen/edit_text_size"
                 android:textAlignment="center"
                 android:text="@string/text_pow_warning"
-                android:layout_marginTop="@dimen/vertical_margin" />
+                android:layout_marginTop="@dimen/vertical_content_margin" />
 
         </LinearLayout>
 

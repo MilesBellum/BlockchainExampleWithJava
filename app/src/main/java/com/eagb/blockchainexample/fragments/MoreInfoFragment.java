@@ -3,6 +3,8 @@ package com.eagb.blockchainexample.fragments;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -82,8 +84,8 @@ public class MoreInfoFragment extends DialogFragment implements View.OnClickList
         super.onStart();
         Dialog dialog = getDialog();
         if (dialog != null && dialog.getWindow() != null) {
-            int width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            int width = ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = ViewGroup.LayoutParams.MATCH_PARENT;
             dialog.getWindow().setLayout(width, height);
         }
     }
@@ -94,7 +96,8 @@ public class MoreInfoFragment extends DialogFragment implements View.OnClickList
         final Dialog dialog = new Dialog(mContext);
         if (dialog.getWindow() != null) {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
         return dialog;
     }

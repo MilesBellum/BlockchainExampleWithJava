@@ -1,7 +1,7 @@
 <resources>
     <dimen name="content_margin">16dp</dimen>
-    <dimen name="content_padding">16dp</dimen>
-    <dimen name="vertical_margin">24dp</dimen>
+    <dimen name="vertical_content_margin">24dp</dimen>
+    <dimen name="horizontal_content_margin">16dp</dimen>
     <dimen name="vertical_title_margin">8dp</dimen>
 
     <dimen name="item_rows_margin">8dp</dimen>
