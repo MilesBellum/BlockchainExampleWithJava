@@ -6,7 +6,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     tools:context=".fragments.PowFragment"
-    android:background="@android:color/white"
     android:layout_gravity="center">
 
     <LinearLayout
@@ -36,7 +35,7 @@
                 android:id="@+id/txt_title"
                 android:text="@string/title_pow"
                 android:textStyle="bold"
-                android:textColor="@color/darker_gray"
+                android:textColor="@color/textColor"
                 android:textAlignment="center"
                 android:textSize="@dimen/title_text_size"
                 android:layout_marginTop="@dimen/vertical_title_margin"
@@ -58,8 +57,8 @@
                     android:imeOptions="actionDone"
                     android:maxLength="2"
                     android:maxLines="1"
-                    android:textColorHint="@color/gray"
-                    android:textColor="@color/darker_gray"
+                    android:textColorHint="@color/textHintColor"
+                    android:textColor="@color/textColor"
                     android:textSize="@dimen/edit_text_size"
                     android:textAlignment="textStart"
                     android:textStyle="normal" />
@@ -70,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="normal"
-                android:textColor="@color/darker_gray"
+                android:textColor="@color/textColor"
                 android:textSize="@dimen/edit_text_size"
                 android:textAlignment="center"
                 android:text="@string/text_pow_warning"
@@ -86,7 +85,7 @@
             android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
             android:textStyle="bold"
             android:textSize="@dimen/edit_text_size"
-            android:textColor="@color/darker_gray"
+            android:textColor="@color/textColor"
             app:cornerRadius="@dimen/card_corner_radius"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_margin="@dimen/button_margin"

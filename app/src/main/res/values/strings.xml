@@ -3,8 +3,9 @@
 
     <string name="log_blockchain_valid">Blockchain valid?</string>
 
-    <string name="action_encrypt_data">Encrypt message</string>
     <string name="action_set_pow">Set Proof-of-Work</string>
+    <string name="action_encrypt_data">Encrypt message</string>
+    <string name="action_dark_theme">Dark theme</string>
     <string name="action_more">More info</string>
     <string name="action_exit">Exit</string>
 

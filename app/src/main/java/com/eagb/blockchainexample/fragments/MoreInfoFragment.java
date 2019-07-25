@@ -96,7 +96,6 @@ public class MoreInfoFragment extends DialogFragment implements View.OnClickList
         final Dialog dialog = new Dialog(mContext);
         if (dialog.getWindow() != null) {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
         return dialog;

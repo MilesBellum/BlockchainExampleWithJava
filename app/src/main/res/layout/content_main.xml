@@ -33,7 +33,6 @@
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:layout_margin="@dimen/content_margin"
-            android:background="@color/softer_gray"
             app:cardElevation="@dimen/card_elevation"
             app:cardCornerRadius="@dimen/card_corner_radius">
 
@@ -51,8 +50,8 @@
                     android:layout_weight="1"
                     android:id="@+id/edit_message"
                     android:hint="@string/text_write_your_message"
-                    android:textColorHint="@color/gray"
-                    android:textColor="@color/darker_gray"
+                    android:textColorHint="@color/textHintColor"
+                    android:textColor="@color/textColor"
                     android:textSize="@dimen/edit_text_size"
                     android:textAlignment="textStart"
                     android:textStyle="normal"

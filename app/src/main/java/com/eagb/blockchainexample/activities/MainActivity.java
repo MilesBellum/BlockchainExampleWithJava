@@ -1,7 +1,9 @@
 package com.eagb.blockchainexample.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,13 +33,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Blockchain blockchain;
     private RecyclerView mRecyclerView;
     private SharedPreferencesManager prefs;
-    private boolean isEncryptionActivated;
+    private boolean isEncryptionActivated, isDarkThemeActivated;
 
     private static final String TAG_POW = "prof_of_work";
     private static final String TAG_MORE_INFO = "more_info";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        prefs = new SharedPreferencesManager(this);
+        isDarkThemeActivated = prefs.isDarkTheme();
+        PowerManager powerManager = (PowerManager)getSystemService(POWER_SERVICE);
+        boolean powerSaveMode = powerManager.isPowerSaveMode();
+        if (powerSaveMode) {
+            AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        } else {
+            if (isDarkThemeActivated) {
+                AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_YES);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        }
+        // Setting the Night mode - must be done before calling super()
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -46,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editMessage = findViewById(R.id.edit_message);
         mRecyclerView = findViewById(R.id.content);
 
-        prefs = new SharedPreferencesManager(this);
         isEncryptionActivated = prefs.getEncryptionStatus();
 
         // Use this setting to improve performance if you know that changes
@@ -169,17 +188,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
-        MenuItem checkable = menu.findItem(R.id.action_encrypt);
-        checkable.setChecked(isEncryptionActivated);
+        MenuItem checkEncrypt = menu.findItem(R.id.action_encrypt);
+        checkEncrypt.setChecked(isEncryptionActivated);
+
+        MenuItem checkTheme = menu.findItem(R.id.action_dark);
+        checkTheme.setChecked(isDarkThemeActivated);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml-v25.
         switch(item.getItemId()) {
+            case R.id.action_pow:
+                PowFragment powFragment = PowFragment.newInstance();
+                powFragment.show(this.getSupportFragmentManager(), TAG_POW);
+                break;
             case R.id.action_encrypt:
                 isEncryptionActivated = !item.isChecked();
                 item.setChecked(isEncryptionActivated);
@@ -190,10 +213,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 prefs.setEncryptionStatus(isEncryptionActivated);
                 return true;
-            case R.id.action_pow:
-                PowFragment powFragment = PowFragment.newInstance();
-                powFragment.show(this.getSupportFragmentManager(), TAG_POW);
-                break;
+            case R.id.action_dark:
+                isDarkThemeActivated = !item.isChecked();
+                item.setChecked(isDarkThemeActivated);
+                prefs.setDarkTheme(isDarkThemeActivated);
+                Intent intent = this.getPackageManager().getLaunchIntentForPackage(this.getPackageName());
+                startActivity(intent);
+                finish();
+                return true;
             case R.id.action_more:
                 MoreInfoFragment moreInfoFragment = MoreInfoFragment.newInstance();
                 moreInfoFragment.show(this.getSupportFragmentManager(), TAG_MORE_INFO);
