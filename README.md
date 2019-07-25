@@ -35,6 +35,11 @@ Get more info about this app and the Blockchain.
 ![More_info](screenshots/more_info.png "More info")
 
 
+Switch to dark theme when you need it or in Battery saver.
+
+![Dark_theme](screenshots/dark_theme.png "Dark theme")
+
+
 Contact
 ----------
 For anything about the project, you can email me at eagb.mb@gmail.com.
