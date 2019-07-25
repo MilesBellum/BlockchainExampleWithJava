@@ -4,8 +4,20 @@ This mobile app is an example to learn how Blockchain works as an Android app us
 
 Getting started
 ---------------
-You can clone or download this repo and use it freely. If there are build errors, in Android Studio go to `Tools -> Android -> SDK Manager` and install any available updates. Then go to `Build -> Clean Project` and finally `Build -> Rebuild Project`.
-Remember, this project runs with AndroidX and new Material Design. So you will need getting the last API version and updates (`targetSdkVersion 28`).
+You can clone or fork this repo and use it freely. If there are build errors, in Android Studio go to `Tools -> Android -> SDK Manager` and install any available updates. Then go to `Build -> Clean Project` and finally `Build -> Rebuild Project`.
+
+Remember, you will need getting the last API version and updates. This project runs with AndroidX and new Material Design, so, if you want to keep this, leave the dependencies as they are.
+
+#### build.gradle
+```gradle
+dependencies {
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.0.0'
+}
+```
 
 
 Screenshots
