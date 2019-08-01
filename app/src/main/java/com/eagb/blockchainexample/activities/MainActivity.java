@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } else {
                             try {
                                 // Broadcast data
-                                blockchain.addBlock(blockchain.newBlock(CipherUtils.encryptIt(message)));
+                                blockchain.addBlock(blockchain.newBlock(CipherUtils.encryptIt(message).trim()));
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Toast.makeText(getApplicationContext(), R.string.error_something_wrong, Toast.LENGTH_LONG).show();
