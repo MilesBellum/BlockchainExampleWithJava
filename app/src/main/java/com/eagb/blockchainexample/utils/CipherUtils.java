@@ -39,6 +39,7 @@ public class CipherUtils {
                 BadPaddingException | NoSuchPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
+
         return value;
     }
 
@@ -61,6 +62,7 @@ public class CipherUtils {
                 BadPaddingException | NoSuchPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
+
         return value;
     }
 }

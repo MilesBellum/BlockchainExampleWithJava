@@ -1,6 +1,7 @@
 <resources>
     <dimen name="content_margin">16dp</dimen>
     <dimen name="vertical_content_margin">24dp</dimen>
+    <dimen name="vertical_subtitle_margin">8dp</dimen>
     <dimen name="horizontal_content_margin">16dp</dimen>
     <dimen name="vertical_title_margin">8dp</dimen>
 
@@ -11,6 +12,7 @@
     <dimen name="card_corner_radius">8dp</dimen>
 
     <dimen name="edit_text_margin">16dp</dimen>
+    <dimen name="edit_text_padding">8dp</dimen>
 
     <dimen name="button_margin">8dp</dimen>
 

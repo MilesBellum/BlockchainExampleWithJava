@@ -8,12 +8,13 @@ import com.eagb.blockchainexample.R;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ViewHolder extends RecyclerView.ViewHolder {
+public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
     public TextView txtIndex, txtPreviousHash, txtTimestamp, txtData, txtHash;
 
-    public ViewHolder(@NonNull final View itemView) {
+    public RecyclerViewHolder(@NonNull final View itemView) {
         super(itemView);
+
         txtIndex = itemView.findViewById(R.id.txt_index);
         txtPreviousHash = itemView.findViewById(R.id.txt_previous_hash);
         txtTimestamp = itemView.findViewById(R.id.txt_timestamp);

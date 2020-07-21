@@ -8,8 +8,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.eagb.blockchainexample.R;
-import com.eagb.blockchainexample.utils.Block;
-import com.eagb.blockchainexample.holders.ViewHolder;
+import com.eagb.blockchainexample.models.BlockModel;
+import com.eagb.blockchainexample.holders.RecyclerViewHolder;
 
 import java.util.Date;
 import java.util.List;
@@ -18,14 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class BlockAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class BlockAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
-    private List<Block> blocks;
+    private List<BlockModel> blocks;
     private Context mContext;
     private int lastPosition = -1;
 
     // Provide a suitable constructor
-    public BlockAdapter(@NonNull Context context, @Nullable List<Block> blocks) {
+    public BlockAdapter(@NonNull Context context, @Nullable List<BlockModel> blocks) {
         this.mContext = context;
         this.blocks = blocks;
     }
@@ -33,14 +33,15 @@ public class BlockAdapter extends RecyclerView.Adapter<ViewHolder> {
     // Create new views (invoked by the layout manager)
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
+    public RecyclerViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
         // Inflate the layout, initialize the View Holder
         final View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-        return new ViewHolder(view);
+
+        return new RecyclerViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerViewHolder viewHolder, int position) {
         // Use the provided View Holder on the onCreateViewHolder method
         // to populate the current row on the RecyclerView
         viewHolder.txtIndex.setText(String.format(

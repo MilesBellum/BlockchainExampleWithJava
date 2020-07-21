@@ -1,22 +1,24 @@
-package com.eagb.blockchainexample.utils;
+package com.eagb.blockchainexample.models;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import androidx.annotation.Nullable;
 
-public class Block {
+public class BlockModel {
+
     private int index, nonce;
     private long timestamp;
     private String hash, previousHash, data;
 
-    Block(int index, long timestamp, @Nullable String previousHash, @Nullable String data) {
+    public BlockModel(int index, long timestamp, @Nullable String previousHash, @Nullable String data) {
         this.index = index;
         this.timestamp = timestamp;
         this.previousHash = previousHash;
         this.data = data;
+
         nonce = 0;
-        hash = Block.calculateHash(this);
+        hash = BlockModel.calculateHash(this);
     }
 
     public int getIndex() {
@@ -43,7 +45,7 @@ public class Block {
         return index + timestamp + previousHash + data + nonce;
     }
 
-    static String calculateHash(Block block) {
+    public static String calculateHash(BlockModel block) {
         if (block != null) {
             MessageDigest messageDigest;
 
@@ -54,7 +56,7 @@ public class Block {
             }
 
             String txt = block.str();
-            final byte bytes[] = messageDigest.digest(txt.getBytes());
+            final byte[] bytes = messageDigest.digest(txt.getBytes());
             final StringBuilder builder = new StringBuilder();
 
             for (final byte b : bytes) {
@@ -74,12 +76,12 @@ public class Block {
     }
 
     // Proof-of-Work (mining blocks)
-    void mineBlock(int difficulty) {
+    public void mineBlock(int difficulty) {
         nonce = 0;
 
         while (!getHash().substring(0,  difficulty).equals(addZeros(difficulty))) {
             nonce++;
-            hash = Block.calculateHash(this);
+            hash = BlockModel.calculateHash(this);
         }
     }
 

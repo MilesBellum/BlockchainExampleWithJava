@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Blockchain Example</string>
 
-    <string name="log_blockchain_valid">Blockchain valid?</string>
+    <string name="log_blockchain_valid">Blockchain valid? %1$b</string>
 
     <string name="action_set_pow">Set Proof-of-Work</string>
     <string name="action_encrypt_data">Encrypt message</string>
@@ -29,6 +29,7 @@
         <b>Note:</b> The app will be restarted to apply the change.</string>
     <string name="text_continue">I understood. Continue and restart</string>
     <string name="text_developed_by">Developed by Edgar Garcia</string>
+    <string name="text_app_version">v.1.0.0 - Build 01</string>
     <string name="text_more_info">This app is an example to learn how Blockchain works as an Android app using Java.
         To know more about Blockchain you can visit:</string>
     <string name="text_check_blockchain">Blockchain tutorial</string>
@@ -44,7 +45,7 @@
     <string name="text_love">&lt;3</string>
     <string name="text_thank_you">Thanks a lot!</string>
 
-    <string name="error_blockchain_corrupted">Blockchain corrupted. Inserted an invalid block</string>
+    <string name="error_blockchain_corrupted">Blockchain corrupted. Invalid block inserted</string>
     <string name="error_something_wrong">Something is wrong</string>
     <string name="error_empty_data">You are trying to send empty data</string>
 

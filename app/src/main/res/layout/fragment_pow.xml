@@ -6,6 +6,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     tools:context=".fragments.PowFragment"
+    android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
     android:layout_gravity="center">
 
     <LinearLayout
@@ -37,7 +38,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/textColor"
                 android:textAlignment="center"
-                android:textSize="@dimen/title_text_size"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:layout_marginTop="@dimen/vertical_title_margin"
                 android:layout_marginBottom="@dimen/vertical_content_margin" />
 
@@ -51,15 +52,17 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/edit_set_pow"
+                    android:id="@+id/edt_set_pow"
                     android:inputType="numberDecimal"
                     android:digits="1234567890"
                     android:imeOptions="actionDone"
                     android:maxLength="2"
                     android:maxLines="1"
+                    android:padding="@dimen/edit_text_padding"
                     android:textColorHint="@color/textHintColor"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/edit_text_size"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    tools:text="2"
                     android:textAlignment="textStart"
                     android:textStyle="normal" />
 
@@ -70,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="normal"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/edit_text_size"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textAlignment="center"
                 android:text="@string/text_pow_warning"
                 android:layout_marginTop="@dimen/vertical_content_margin" />
@@ -85,7 +88,7 @@
             android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
             android:textStyle="bold"
             android:textSize="@dimen/edit_text_size"
-            android:textColor="@color/textColor"
+            android:textColor="@color/textCautionColor"
             app:cornerRadius="@dimen/card_corner_radius"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_margin="@dimen/button_margin"

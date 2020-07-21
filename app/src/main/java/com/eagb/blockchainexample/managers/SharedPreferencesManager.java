@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class SharedPreferencesManager {
+
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private static final String PREFERENCES_DATA = "eagb.blockchainexample";

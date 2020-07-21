@@ -7,44 +7,48 @@ import android.os.PowerManager;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.eagb.blockchainexample.R;
+import com.eagb.blockchainexample.databinding.ActivityMainBinding;
+import com.eagb.blockchainexample.databinding.ContentMainBinding;
 import com.eagb.blockchainexample.fragments.MoreInfoFragment;
 import com.eagb.blockchainexample.fragments.PowFragment;
 import com.eagb.blockchainexample.managers.SharedPreferencesManager;
 import com.eagb.blockchainexample.utils.CipherUtils;
-import com.eagb.blockchainexample.utils.Blockchain;
-import com.google.android.material.textfield.TextInputEditText;
+import com.eagb.blockchainexample.managers.BlockchainManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextInputEditText editMessage;
+    private ContentMainBinding viewBindingContent;
+
     private ProgressDialog progressDialog;
-    private Blockchain blockchain;
-    private RecyclerView mRecyclerView;
+    private BlockchainManager blockchain;
     private SharedPreferencesManager prefs;
     private boolean isEncryptionActivated, isDarkThemeActivated;
 
-    private static final String TAG_POW = "prof_of_work";
-    private static final String TAG_MORE_INFO = "more_info";
+    private static final String TAG_POW_DIALOG = "proof_of_work_dialog";
+    private static final String TAG_MORE_INFO_DIALOG = "more_info_dialog";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         prefs = new SharedPreferencesManager(this);
         isDarkThemeActivated = prefs.isDarkTheme();
+
         PowerManager powerManager = (PowerManager)getSystemService(POWER_SERVICE);
-        boolean powerSaveMode = powerManager.isPowerSaveMode();
-        if (powerSaveMode) {
+        boolean isPowerSaveMode = false;
+
+        if (powerManager != null) {
+            isPowerSaveMode = powerManager.isPowerSaveMode();
+        }
+        if (isPowerSaveMode) {
             AppCompatDelegate.setDefaultNightMode(
                     AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         } else {
@@ -56,23 +60,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         AppCompatDelegate.MODE_NIGHT_NO);
             }
         }
+
         // Setting the Night mode - must be done before calling super()
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ImageButton btnSendData = findViewById(R.id.btn_send_data);
-        editMessage = findViewById(R.id.edit_message);
-        mRecyclerView = findViewById(R.id.content);
+        ActivityMainBinding viewBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        viewBindingContent = ContentMainBinding.bind(viewBinding.contentMain.getRoot());
+        setContentView(viewBinding.getRoot());
+        setSupportActionBar(viewBinding.toolbar);
 
         isEncryptionActivated = prefs.getEncryptionStatus();
 
         // Use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
+        viewBindingContent.recyclerContent.setHasFixedSize(true);
         // Use a linear layout manager
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        viewBindingContent.recyclerContent.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
         // Setting the Progress Dialog
         showProgressDialog(getResources().getString(R.string.text_creating_blockchain));
@@ -84,23 +86,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        /**
-                         * Initializing Blockchain
-                         * @param PROOF_OF_WORK = difficulty.
-                         *                      Given some difficulty, the CPU will has to find a hash
-                         *                      for the block starting with a given number of zeros.
-                         *                      More Proof-of-Work will be harder to mine and will take longer time.
-                         *                      Watch out!
-                         */
-                        blockchain = new Blockchain(getApplicationContext(), prefs.getPowValue());
-                        mRecyclerView.setAdapter(blockchain.adapter);
+                        // Initializing Blockchain...
+                        // PROOF_OF_WORK = difficulty.
+                        // Given some difficulty, the CPU will has to find a hash for the block
+                        // starting with a given number of zeros.
+                        // More Proof-of-Work will be harder to mine and will take longer time.
+                        // Watch out!
+                        blockchain = new BlockchainManager(getApplicationContext(), prefs.getPowValue());
+                        viewBindingContent.recyclerContent.setAdapter(blockchain.adapter);
                         cancelProgressDialog(progressDialog);
                     }
                 });
             }
         }).start();
 
-        btnSendData.setOnClickListener(this);
+        viewBindingContent.btnSendData.setOnClickListener(this);
     }
 
     // Starting new request on a thread
@@ -111,10 +111,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (blockchain != null && editMessage.getText() != null && mRecyclerView.getAdapter() != null) {
-                    String message = editMessage.getText().toString();
+                if (blockchain != null && viewBindingContent.editMessage.getText() != null && viewBindingContent.recyclerContent.getAdapter() != null) {
+                    String message = viewBindingContent.editMessage.getText().toString();
 
-                    if (!message.equals("")) {
+                    if (!message.isEmpty()) {
 
                         // Verification if encryption is activated
                         if (!isEncryptionActivated) {
@@ -129,14 +129,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 Toast.makeText(getApplicationContext(), R.string.error_something_wrong, Toast.LENGTH_LONG).show();
                             }
                         }
+                        viewBindingContent.recyclerContent.scrollToPosition(blockchain.adapter.getItemCount() - 1);
 
                         // Validate block's data
-                        System.out.println(getResources().getString(R.string.log_blockchain_valid) + " " + blockchain.isBlockChainValid());
+                        System.out.println(getResources().getString(R.string.log_blockchain_valid, blockchain.isBlockChainValid()));
                         if (blockchain.isBlockChainValid()) {
                             // Preparing data to insert to RecyclerView
-                            mRecyclerView.getAdapter().notifyDataSetChanged();
+                            viewBindingContent.recyclerContent.getAdapter().notifyDataSetChanged();
                             // Cleaning the EditText
-                            editMessage.setText("");
+                            viewBindingContent.editMessage.setText("");
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.error_blockchain_corrupted, Toast.LENGTH_LONG).show();
                         }
@@ -154,11 +155,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(@NonNull View view) {
-        switch (view.getId()) {
-            case R.id.btn_send_data:
-                // Start new request on a UI thread
-                startBlockchain();
-                break;
+        if (view.getId() == R.id.btn_send_data) {
+            // Start new request on a UI thread
+            startBlockchain();
         }
     }
 
@@ -193,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         MenuItem checkTheme = menu.findItem(R.id.action_dark);
         checkTheme.setChecked(isDarkThemeActivated);
+
         return true;
     }
 
@@ -201,8 +201,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(item.getItemId()) {
             case R.id.action_pow:
                 PowFragment powFragment = PowFragment.newInstance();
-                powFragment.show(this.getSupportFragmentManager(), TAG_POW);
+                powFragment.show(this.getSupportFragmentManager(), TAG_POW_DIALOG);
                 break;
+
             case R.id.action_encrypt:
                 isEncryptionActivated = !item.isChecked();
                 item.setChecked(isEncryptionActivated);
@@ -213,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 prefs.setEncryptionStatus(isEncryptionActivated);
                 return true;
+
             case R.id.action_dark:
                 isDarkThemeActivated = !item.isChecked();
                 item.setChecked(isDarkThemeActivated);
@@ -221,13 +223,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 finish();
                 return true;
+
             case R.id.action_more:
                 MoreInfoFragment moreInfoFragment = MoreInfoFragment.newInstance();
-                moreInfoFragment.show(this.getSupportFragmentManager(), TAG_MORE_INFO);
+                moreInfoFragment.show(this.getSupportFragmentManager(), TAG_MORE_INFO_DIALOG);
                 break;
+
             case R.id.action_exit:
                 finish();
                 break;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -1,26 +1,27 @@
-package com.eagb.blockchainexample.utils;
+package com.eagb.blockchainexample.managers;
 
 import android.content.Context;
 
 import com.eagb.blockchainexample.adapters.BlockAdapter;
+import com.eagb.blockchainexample.models.BlockModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 
-public class Blockchain {
+public class BlockchainManager {
 
     private int difficulty;
-    private List<Block> blocks;
+    private List<BlockModel> blocks;
     public final BlockAdapter adapter;
 
-    public Blockchain(@NonNull Context context, int difficulty) {
+    public BlockchainManager(@NonNull Context context, int difficulty) {
         this.difficulty = difficulty;
 
         // Creating the 'Genesis block' (first block)
         blocks = new ArrayList<>();
-        Block block = new Block(0, System.currentTimeMillis(), null, "Genesis Block");
+        BlockModel block = new BlockModel(0, System.currentTimeMillis(), null, "Genesis Block");
         block.mineBlock(difficulty);
         blocks.add(block);
 
@@ -28,19 +29,20 @@ public class Blockchain {
         adapter = new BlockAdapter(context, blocks);
     }
 
-    private Block latestBlock() {
+    private BlockModel latestBlock() {
         return blocks.get(blocks.size() - 1);
     }
 
     // Broadcast block
-    public Block newBlock(String data) {
-        Block latestBlock = latestBlock();
-        return new Block(latestBlock.getIndex() + 1, System.currentTimeMillis(),
+    public BlockModel newBlock(String data) {
+        BlockModel latestBlock = latestBlock();
+
+        return new BlockModel(latestBlock.getIndex() + 1, System.currentTimeMillis(),
                 latestBlock.getHash(), data);
     }
 
     // Requesting Proof-of-Work
-    public void addBlock(Block block) {
+    public void addBlock(BlockModel block) {
         if (block != null) {
             block.mineBlock(difficulty);
             blocks.add(block);
@@ -49,7 +51,7 @@ public class Blockchain {
 
     // Validating first block
     private boolean isFirstBlockValid() {
-        Block firstBlock = blocks.get(0);
+        BlockModel firstBlock = blocks.get(0);
 
         if (firstBlock.getIndex() != 0) {
             return false;
@@ -60,11 +62,11 @@ public class Blockchain {
         }
 
         return firstBlock.getHash() != null &&
-                Block.calculateHash(firstBlock).equals(firstBlock.getHash());
+                BlockModel.calculateHash(firstBlock).equals(firstBlock.getHash());
     }
 
     // Validate new block
-    private boolean isValidNewBlock(Block newBlock, Block previousBlock) {
+    private boolean isValidNewBlock(BlockModel newBlock, BlockModel previousBlock) {
         if (newBlock != null  &&  previousBlock != null) {
             if (previousBlock.getIndex() + 1 != newBlock.getIndex()) {
                 return false;
@@ -76,7 +78,7 @@ public class Blockchain {
             }
 
             return newBlock.getHash() != null &&
-                    Block.calculateHash(newBlock).equals(newBlock.getHash());
+                    BlockModel.calculateHash(newBlock).equals(newBlock.getHash());
         }
 
         return false;
@@ -89,8 +91,8 @@ public class Blockchain {
         }
 
         for (int i = 1; i < blocks.size(); i++) {
-            Block currentBlock = blocks.get(i);
-            Block previousBlock = blocks.get(i - 1);
+            BlockModel currentBlock = blocks.get(i);
+            BlockModel previousBlock = blocks.get(i - 1);
 
             if (!isValidNewBlock(currentBlock, previousBlock)) {
                 return false;

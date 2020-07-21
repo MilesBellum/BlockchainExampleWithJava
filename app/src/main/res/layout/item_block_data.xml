@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <LinearLayout
@@ -13,14 +13,13 @@
         android:layout_margin="@dimen/content_margin">
 
         <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_index"
             android:text="@string/title_block_number"
             android:textStyle="bold"
             android:textColor="@color/textColor"
-            android:textSize="@dimen/text_size"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textAlignment="textStart"
             android:layout_marginTop="@dimen/item_rows_margin"
             android:layout_marginEnd="@dimen/item_text_margin" />
@@ -30,25 +29,26 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="@dimen/item_rows_margin">
+
             <TextView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_block_previous_hash"
                 android:textStyle="bold"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/text_size"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textAlignment="textStart"
                 android:layout_marginEnd="@dimen/item_text_margin" />
+
             <TextView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_previous_hash"
                 tools:text="Previous hash"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/text_size"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textAlignment="textStart" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -56,25 +56,26 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="@dimen/item_rows_margin">
+
             <TextView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_block_timestamp"
                 android:textStyle="bold"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/text_size"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textAlignment="textStart"
                 android:layout_marginEnd="@dimen/item_text_margin" />
+
             <TextView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_timestamp"
                 tools:text="Timestamp"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/text_size"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textAlignment="textStart"  />
+
         </LinearLayout>
 
         <LinearLayout
@@ -82,25 +83,26 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="@dimen/item_rows_margin">
+
             <TextView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_block_data"
                 android:textStyle="bold"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/text_size"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textAlignment="textStart"
                 android:layout_marginEnd="@dimen/item_text_margin" />
+
             <TextView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_data"
                 tools:text="Data"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/text_size"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textAlignment="textStart" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -109,25 +111,26 @@
             android:orientation="vertical"
             android:layout_marginTop="@dimen/item_rows_margin"
             android:layout_marginBottom="@dimen/item_rows_margin">
+
             <TextView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_block_hash"
                 android:textStyle="bold"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/text_size"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textAlignment="textStart"
                 android:layout_marginEnd="@dimen/item_text_margin" />
+
             <TextView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_hash"
                 tools:text="Hash"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/text_size"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textAlignment="textStart" />
+
         </LinearLayout>
 
     </LinearLayout>

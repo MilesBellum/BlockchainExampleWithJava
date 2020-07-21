@@ -8,12 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.eagb.blockchainexample.R;
+import com.eagb.blockchainexample.databinding.FragmentPowBinding;
 import com.eagb.blockchainexample.managers.SharedPreferencesManager;
-import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,11 +19,9 @@ import androidx.fragment.app.DialogFragment;
 
 public class PowFragment extends DialogFragment implements View.OnClickListener {
 
-    private Context mContext;
-    private ImageButton btnClose;
-    private TextInputEditText editSetPow;
-    private Button btnApplyChange;
+    private FragmentPowBinding viewBinding;
 
+    private Context mContext;
     private SharedPreferencesManager prefs;
 
     public PowFragment() {
@@ -37,55 +33,41 @@ public class PowFragment extends DialogFragment implements View.OnClickListener 
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        mContext = context;
+        mContext = context.getApplicationContext();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_pow, container, false);
-
-        prefs = new SharedPreferencesManager(mContext);
-
-        btnClose = rootView.findViewById(R.id.btn_close);
-        btnApplyChange = rootView.findViewById(R.id.btn_continue);
-        editSetPow = rootView.findViewById(R.id.edit_set_pow);
-        editSetPow.setText(String.valueOf(prefs.getPowValue()));
-
-        return rootView;
+        viewBinding = FragmentPowBinding.inflate(getLayoutInflater(), container, false);
+        return viewBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btnClose.setOnClickListener(this);
-        btnApplyChange.setOnClickListener(this);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null && dialog.getWindow() != null) {
-            int width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setLayout(width, height);
-        }
+        prefs = new SharedPreferencesManager(mContext);
+        viewBinding.edtSetPow.setText(String.valueOf(prefs.getPowValue()));
+        viewBinding.btnClose.setOnClickListener(this);
+        viewBinding.btnContinue.setOnClickListener(this);
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        final Dialog dialog = new Dialog(mContext);
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         if (dialog.getWindow() != null) {
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
+
         return dialog;
     }
 
@@ -95,10 +77,12 @@ public class PowFragment extends DialogFragment implements View.OnClickListener 
             case R.id.btn_close:
                 dismiss();
                 break;
+
             case R.id.btn_continue:
-                if (editSetPow.getText() != null) {
-                    String pow = editSetPow.getText().toString();
-                    prefs.setPowValue(Integer.valueOf(pow));
+                if (viewBinding.edtSetPow.getText() != null) {
+                    String pow = viewBinding.edtSetPow.getText().toString();
+                    prefs.setPowValue(Integer.parseInt(pow));
+
                     if (getActivity() != null) {
                         Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
                         startActivity(intent);
@@ -115,6 +99,7 @@ public class PowFragment extends DialogFragment implements View.OnClickListener 
     public void onDetach() {
         super.onDetach();
 
+        viewBinding = null;
         mContext = null;
     }
 
