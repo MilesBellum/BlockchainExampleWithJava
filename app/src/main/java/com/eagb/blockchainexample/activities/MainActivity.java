@@ -80,25 +80,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         showProgressDialog(getResources().getString(R.string.text_creating_blockchain));
 
         // Starting Blockchain request on a thread
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Initializing Blockchain...
-                        // PROOF_OF_WORK = difficulty.
-                        // Given some difficulty, the CPU will has to find a hash for the block
-                        // starting with a given number of zeros.
-                        // More Proof-of-Work will be harder to mine and will take longer time.
-                        // Watch out!
-                        blockchain = new BlockchainManager(getApplicationContext(), prefs.getPowValue());
-                        viewBindingContent.recyclerContent.setAdapter(blockchain.adapter);
-                        cancelProgressDialog(progressDialog);
-                    }
-                });
-            }
-        }).start();
+        new Thread(() -> runOnUiThread(() -> {
+            // Initializing Blockchain...
+            // PROOF_OF_WORK = difficulty.
+            // Given some difficulty, the CPU will has to find a hash for the block
+            // starting with a given number of zeros.
+            // More Proof-of-Work will be harder to mine and will take longer time.
+            // Watch out!
+            blockchain = new BlockchainManager(getApplicationContext(), prefs.getPowValue());
+            viewBindingContent.recyclerContent.setAdapter(blockchain.adapter);
+            cancelProgressDialog(progressDialog);
+        })).start();
 
         viewBindingContent.btnSendData.setOnClickListener(this);
     }
@@ -108,47 +100,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Setting the Progress Dialog
         showProgressDialog(getResources().getString(R.string.text_mining_blocks));
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (blockchain != null && viewBindingContent.editMessage.getText() != null && viewBindingContent.recyclerContent.getAdapter() != null) {
-                    String message = viewBindingContent.editMessage.getText().toString();
+        runOnUiThread(() -> {
+            if (blockchain != null && viewBindingContent.editMessage.getText() != null && viewBindingContent.recyclerContent.getAdapter() != null) {
+                String message = viewBindingContent.editMessage.getText().toString();
 
-                    if (!message.isEmpty()) {
+                if (!message.isEmpty()) {
 
-                        // Verification if encryption is activated
-                        if (!isEncryptionActivated) {
-                            // Broadcast data
-                            blockchain.addBlock(blockchain.newBlock(message));
-                        } else {
-                            try {
-                                // Broadcast data
-                                blockchain.addBlock(blockchain.newBlock(CipherUtils.encryptIt(message).trim()));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Toast.makeText(getApplicationContext(), R.string.error_something_wrong, Toast.LENGTH_LONG).show();
-                            }
-                        }
-                        viewBindingContent.recyclerContent.scrollToPosition(blockchain.adapter.getItemCount() - 1);
-
-                        // Validate block's data
-                        System.out.println(getResources().getString(R.string.log_blockchain_valid, blockchain.isBlockChainValid()));
-                        if (blockchain.isBlockChainValid()) {
-                            // Preparing data to insert to RecyclerView
-                            viewBindingContent.recyclerContent.getAdapter().notifyDataSetChanged();
-                            // Cleaning the EditText
-                            viewBindingContent.editMessage.setText("");
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.error_blockchain_corrupted, Toast.LENGTH_LONG).show();
-                        }
+                    // Verification if encryption is activated
+                    if (!isEncryptionActivated) {
+                        // Broadcast data
+                        blockchain.addBlock(blockchain.newBlock(message));
                     } else {
-                        Toast.makeText(getApplicationContext(), R.string.error_empty_data, Toast.LENGTH_LONG).show();
+                        try {
+                            // Broadcast data
+                            blockchain.addBlock(blockchain.newBlock(CipherUtils.encryptIt(message).trim()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), R.string.error_something_wrong, Toast.LENGTH_LONG).show();
+                        }
                     }
+                    viewBindingContent.recyclerContent.scrollToPosition(blockchain.adapter.getItemCount() - 1);
 
-                    cancelProgressDialog(progressDialog);
+                    // Validate block's data
+                    System.out.println(getResources().getString(R.string.log_blockchain_valid, blockchain.isBlockChainValid()));
+                    if (blockchain.isBlockChainValid()) {
+                        // Preparing data to insert to RecyclerView
+                        viewBindingContent.recyclerContent.getAdapter().notifyDataSetChanged();
+                        // Cleaning the EditText
+                        viewBindingContent.editMessage.setText("");
+                    } else {
+                        Toast.makeText(getApplicationContext(), R.string.error_blockchain_corrupted, Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.error_something_wrong, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.error_empty_data, Toast.LENGTH_LONG).show();
                 }
+
+                cancelProgressDialog(progressDialog);
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.error_something_wrong, Toast.LENGTH_LONG).show();
             }
         });
     }
