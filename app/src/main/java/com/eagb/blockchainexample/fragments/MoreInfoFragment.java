@@ -77,6 +77,7 @@ public class MoreInfoFragment extends DialogFragment implements View.OnClickList
     @Override
     public void onStart() {
         super.onStart();
+
         Dialog dialog = getDialog();
         if (dialog != null && dialog.getWindow() != null) {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -85,7 +86,6 @@ public class MoreInfoFragment extends DialogFragment implements View.OnClickList
 
     @Override
     public void onClick(@NonNull View view) {
-        Intent intent;
         String url;
 
         switch (view.getId()) {
@@ -96,43 +96,37 @@ public class MoreInfoFragment extends DialogFragment implements View.OnClickList
             case R.id.ll_check_blockchain:
                 // Checking a Blockchain tutorial
                 url = "https://www.guru99.com/blockchain-tutorial.html";
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                openUrl(url);
                 break;
 
             case R.id.ll_check_white_paper:
                 // Checking the White Paper of Bitcoin
                 url = "https://bitcoin.org/bitcoin.pdf";
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                openUrl(url);
                 break;
 
             case R.id.ll_check_book_1:
                 // Checking Blockchain Revolution book
                 url = "https://www.amazon.com/dp/1101980141/ref=cm_sw_em_r_mt_dp_U_amjmDbR0D5S46";
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                openUrl(url);
                 break;
 
             case R.id.ll_check_book_2:
                 // Checking The Science of the Blockchain book
                 url = "https://www.amazon.com/dp/1544232101/ref=cm_sw_em_r_mt_dp_U_wnjmDbKXPKTCP";
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                openUrl(url);
                 break;
 
             case R.id.ll_check_repo:
                 // Checking the official repo to fork
                 url = "https://github.com/MilesBellum/BlockchainExample";
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                openUrl(url);
                 break;
 
             case R.id.ll_check_web:
                 // Checking the official web site
                 url = "https://eagb-corp.web.app";
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                openUrl(url);
                 break;
 
             case R.id.txt_heart:
@@ -140,6 +134,11 @@ public class MoreInfoFragment extends DialogFragment implements View.OnClickList
                 Toast.makeText(mContext, R.string.text_thank_you, Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private void openUrl(@NonNull String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intent);
     }
 
     @Override

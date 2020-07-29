@@ -61,7 +61,6 @@ public class PowFragment extends DialogFragment implements View.OnClickListener 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         if (dialog.getWindow() != null) {

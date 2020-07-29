@@ -2,6 +2,7 @@ package com.eagb.blockchainexample.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.View;
@@ -16,7 +17,13 @@ import com.eagb.blockchainexample.fragments.MoreInfoFragment;
 import com.eagb.blockchainexample.fragments.PowFragment;
 import com.eagb.blockchainexample.managers.SharedPreferencesManager;
 import com.eagb.blockchainexample.utils.CipherUtils;
-import com.eagb.blockchainexample.managers.BlockchainManager;
+import com.eagb.blockchainexample.managers.BlockChainManager;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,10 +37,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ContentMainBinding viewBindingContent;
 
     private ProgressDialog progressDialog;
-    private BlockchainManager blockchain;
+    private BlockChainManager blockChain;
     private SharedPreferencesManager prefs;
     private boolean isEncryptionActivated, isDarkThemeActivated;
+    private AppUpdateManager appUpdateManager;
 
+    private static final int UPDATE_REQUEST_CODE = 1000;
     private static final String TAG_POW_DIALOG = "proof_of_work_dialog";
     private static final String TAG_MORE_INFO_DIALOG = "more_info_dialog";
 
@@ -68,6 +77,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(viewBinding.getRoot());
         setSupportActionBar(viewBinding.toolbar);
 
+        // Check a possible update from Play Store
+        checkUpdate();
+
         isEncryptionActivated = prefs.getEncryptionStatus();
 
         // Use this setting to improve performance if you know that changes
@@ -77,31 +89,90 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewBindingContent.recyclerContent.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
         // Setting the Progress Dialog
-        showProgressDialog(getResources().getString(R.string.text_creating_blockchain));
+        showProgressDialog(getResources().getString(R.string.text_creating_block_chain));
 
-        // Starting Blockchain request on a thread
+        // Starting BlockChain request on a thread
         new Thread(() -> runOnUiThread(() -> {
-            // Initializing Blockchain...
+            // Initializing BlockChain...
             // PROOF_OF_WORK = difficulty.
             // Given some difficulty, the CPU will has to find a hash for the block
             // starting with a given number of zeros.
             // More Proof-of-Work will be harder to mine and will take longer time.
             // Watch out!
-            blockchain = new BlockchainManager(getApplicationContext(), prefs.getPowValue());
-            viewBindingContent.recyclerContent.setAdapter(blockchain.adapter);
+            blockChain = new BlockChainManager(this, prefs.getPowValue());
+            viewBindingContent.recyclerContent.setAdapter(blockChain.adapter);
             cancelProgressDialog(progressDialog);
         })).start();
 
         viewBindingContent.btnSendData.setOnClickListener(this);
     }
 
+    // Check a possible update from Play Store
+    private void checkUpdate() {
+        // Creates instance of the manager
+        appUpdateManager = AppUpdateManagerFactory.create(this);
+
+        // Returns an intent object that you use to check for an update
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+
+        // Checks that the platform will allow the specified type of update
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                // Request the update
+                startTheUpdate(appUpdateManager, appUpdateInfo);
+            }
+        });
+
+    }
+
+    // If an update exist, request for the update
+    private void startTheUpdate(@NonNull AppUpdateManager appUpdateManager, @NonNull AppUpdateInfo appUpdateInfo) {
+        try {
+            appUpdateManager.startUpdateFlowForResult(
+                    // Pass the intent that is returned by 'getAppUpdateInfo()'
+                    appUpdateInfo,
+                    // Or 'AppUpdateType.FLEXIBLE' for flexible updates
+                    AppUpdateType.IMMEDIATE,
+                    // The current activity making the update request
+                    this,
+                    // Include a request code to later monitor this update request
+                    UPDATE_REQUEST_CODE);
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Continue with the update if one exists
+        resumeTheUpdate();
+    }
+
+    // Continue with the update if one exists
+    private void resumeTheUpdate() {
+        appUpdateManager
+                .getAppUpdateInfo()
+                .addOnSuccessListener(
+                        appUpdateInfo -> {
+                            if (appUpdateInfo.updateAvailability()
+                                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                                // If an in-app update is already running, resume the update.
+                                startTheUpdate(appUpdateManager, appUpdateInfo);
+                            }
+
+                        });
+    }
+
     // Starting new request on a thread
-    private void startBlockchain() {
+    private void startBlockChain() {
         // Setting the Progress Dialog
         showProgressDialog(getResources().getString(R.string.text_mining_blocks));
 
         runOnUiThread(() -> {
-            if (blockchain != null && viewBindingContent.editMessage.getText() != null && viewBindingContent.recyclerContent.getAdapter() != null) {
+            if (blockChain != null && viewBindingContent.editMessage.getText() != null && viewBindingContent.recyclerContent.getAdapter() != null) {
                 String message = viewBindingContent.editMessage.getText().toString();
 
                 if (!message.isEmpty()) {
@@ -109,35 +180,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // Verification if encryption is activated
                     if (!isEncryptionActivated) {
                         // Broadcast data
-                        blockchain.addBlock(blockchain.newBlock(message));
+                        blockChain.addBlock(blockChain.newBlock(message));
                     } else {
                         try {
                             // Broadcast data
-                            blockchain.addBlock(blockchain.newBlock(CipherUtils.encryptIt(message).trim()));
+                            blockChain.addBlock(blockChain.newBlock(CipherUtils.encryptIt(message).trim()));
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(getApplicationContext(), R.string.error_something_wrong, Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, R.string.error_something_wrong, Toast.LENGTH_LONG).show();
                         }
                     }
-                    viewBindingContent.recyclerContent.scrollToPosition(blockchain.adapter.getItemCount() - 1);
+                    viewBindingContent.recyclerContent.scrollToPosition(blockChain.adapter.getItemCount() - 1);
 
                     // Validate block's data
-                    System.out.println(getResources().getString(R.string.log_blockchain_valid, blockchain.isBlockChainValid()));
-                    if (blockchain.isBlockChainValid()) {
+                    System.out.println(getResources().getString(R.string.log_block_chain_valid, blockChain.isBlockChainValid()));
+                    if (blockChain.isBlockChainValid()) {
                         // Preparing data to insert to RecyclerView
                         viewBindingContent.recyclerContent.getAdapter().notifyDataSetChanged();
                         // Cleaning the EditText
                         viewBindingContent.editMessage.setText("");
                     } else {
-                        Toast.makeText(getApplicationContext(), R.string.error_blockchain_corrupted, Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, R.string.error_block_chain_corrupted, Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.error_empty_data, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.error_empty_data, Toast.LENGTH_LONG).show();
                 }
 
                 cancelProgressDialog(progressDialog);
             } else {
-                Toast.makeText(getApplicationContext(), R.string.error_something_wrong, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.error_something_wrong, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -146,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(@NonNull View view) {
         if (view.getId() == R.id.btn_send_data) {
             // Start new request on a UI thread
-            startBlockchain();
+            startBlockChain();
         }
     }
 
@@ -228,4 +299,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         return super.onOptionsItemSelected(item);
     }
+
 }

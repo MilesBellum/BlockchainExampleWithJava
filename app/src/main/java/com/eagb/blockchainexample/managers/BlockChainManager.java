@@ -9,14 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-public class BlockchainManager {
+public class BlockChainManager {
 
     private int difficulty;
     private List<BlockModel> blocks;
     public final BlockAdapter adapter;
 
-    public BlockchainManager(@NonNull Context context, int difficulty) {
+    public BlockChainManager(@NonNull Context context, int difficulty) {
         this.difficulty = difficulty;
 
         // Creating the 'Genesis block' (first block)
@@ -66,7 +67,7 @@ public class BlockchainManager {
     }
 
     // Validate new block
-    private boolean isValidNewBlock(BlockModel newBlock, BlockModel previousBlock) {
+    private boolean isValidNewBlock(@Nullable BlockModel newBlock, @Nullable BlockModel previousBlock) {
         if (newBlock != null  &&  previousBlock != null) {
             if (previousBlock.getIndex() + 1 != newBlock.getIndex()) {
                 return false;

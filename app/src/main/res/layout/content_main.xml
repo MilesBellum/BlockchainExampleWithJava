@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/btn_send_data"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_send_24dp"
+                    app:srcCompat="@drawable/ic_send_24dp"
                     android:layout_marginStart="@dimen/edit_text_margin"
                     android:layout_gravity="center_vertical"
                     android:contentDescription="@string/cd_send_data" />

@@ -2,6 +2,8 @@ package com.eagb.blockchainexample.utils;
 
 import android.util.Base64;
 
+import androidx.annotation.NonNull;
+
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -22,7 +24,7 @@ public class CipherUtils {
 
     // This method is used to encrypt the message, but this feature is not necessary in Blockchain,
     // so I just added this to keep the example more interesting
-    public static String encryptIt(String value) {
+    public static String encryptIt(@NonNull String value) {
         try {
             DESKeySpec keySpec = new DESKeySpec(PASSWORD.getBytes(StandardCharsets.UTF_8));
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(ALGORITHM);
@@ -44,7 +46,7 @@ public class CipherUtils {
     }
 
     // This method is not used in this app, but it's not bad to know how to decrypt the text
-    public static String decryptIt(String value) {
+    public static String decryptIt(@NonNull String value) {
         try {
             DESKeySpec keySpec = new DESKeySpec(PASSWORD.getBytes(StandardCharsets.UTF_8));
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(ALGORITHM);

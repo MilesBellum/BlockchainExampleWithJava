@@ -45,7 +45,7 @@ public class BlockModel {
         return index + timestamp + previousHash + data + nonce;
     }
 
-    public static String calculateHash(BlockModel block) {
+    public static String calculateHash(@Nullable BlockModel block) {
         if (block != null) {
             MessageDigest messageDigest;
 
