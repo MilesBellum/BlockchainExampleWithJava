@@ -10,7 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView txtIndex, txtPreviousHash, txtTimestamp, txtData, txtHash;
+    public TextView txtIndex;
+    public TextView txtPreviousHash;
+    public TextView txtTimestamp;
+    public TextView txtData;
+    public TextView txtHash;
 
     public RecyclerViewHolder(@NonNull final View itemView) {
         super(itemView);

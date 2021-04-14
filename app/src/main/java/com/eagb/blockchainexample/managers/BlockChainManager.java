@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 
 public class BlockChainManager {
 
-    private int difficulty;
-    private List<BlockModel> blocks;
+    private final int difficulty;
+    private final List<BlockModel> blocks;
     public final BlockAdapter adapter;
 
     public BlockChainManager(@NonNull Context context, int difficulty) {

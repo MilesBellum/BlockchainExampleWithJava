@@ -88,51 +88,35 @@ public class MoreInfoFragment extends DialogFragment implements View.OnClickList
     public void onClick(@NonNull View view) {
         String url;
 
-        switch (view.getId()) {
-            case R.id.btn_close:
-                dismiss();
-                break;
-
-            case R.id.ll_check_blockchain:
-                // Checking a Blockchain tutorial
-                url = "https://www.guru99.com/blockchain-tutorial.html";
-                openUrl(url);
-                break;
-
-            case R.id.ll_check_white_paper:
-                // Checking the White Paper of Bitcoin
-                url = "https://bitcoin.org/bitcoin.pdf";
-                openUrl(url);
-                break;
-
-            case R.id.ll_check_book_1:
-                // Checking Blockchain Revolution book
-                url = "https://www.amazon.com/dp/1101980141/ref=cm_sw_em_r_mt_dp_U_amjmDbR0D5S46";
-                openUrl(url);
-                break;
-
-            case R.id.ll_check_book_2:
-                // Checking The Science of the Blockchain book
-                url = "https://www.amazon.com/dp/1544232101/ref=cm_sw_em_r_mt_dp_U_wnjmDbKXPKTCP";
-                openUrl(url);
-                break;
-
-            case R.id.ll_check_repo:
-                // Checking the official repo to fork
-                url = "https://github.com/MilesBellum/BlockchainExample";
-                openUrl(url);
-                break;
-
-            case R.id.ll_check_web:
-                // Checking the official web site
-                url = "https://eagb-corp.web.app";
-                openUrl(url);
-                break;
-
-            case R.id.txt_heart:
-                // Showing an EasterEgg
-                Toast.makeText(mContext, R.string.text_thank_you, Toast.LENGTH_SHORT).show();
-                break;
+        if (R.id.btn_close == view.getId()) {
+            dismiss();
+        } else if (R.id.ll_check_blockchain == view.getId()) {
+            // Checking a Blockchain tutorial
+            url = "https://www.guru99.com/blockchain-tutorial.html";
+            openUrl(url);
+        } else if (R.id.ll_check_white_paper == view.getId()) {
+            // Checking the White Paper of Bitcoin
+            url = "https://bitcoin.org/bitcoin.pdf";
+            openUrl(url);
+        } else if (R.id.ll_check_book_1 == view.getId()) {
+            // Checking Blockchain Revolution book
+            url = "https://www.amazon.com/dp/1101980141/ref=cm_sw_em_r_mt_dp_U_amjmDbR0D5S46";
+            openUrl(url);
+        } else if (R.id.ll_check_book_2 == view.getId()) {
+            // Checking The Science of the Blockchain book
+            url = "https://www.amazon.com/dp/1544232101/ref=cm_sw_em_r_mt_dp_U_wnjmDbKXPKTCP";
+            openUrl(url);
+        } else if (R.id.ll_check_repo == view.getId()) {
+            // Checking the official repo to fork
+            url = "https://github.com/MilesBellum/BlockchainExample";
+            openUrl(url);
+        } else if (R.id.ll_check_web == view.getId()) {
+            // Checking the official web site
+            url = "https://eagb-corp.web.app";
+            openUrl(url);
+        } else if (R.id.txt_heart == view.getId()) {
+            // Showing an EasterEgg
+            Toast.makeText(mContext, R.string.text_thank_you, Toast.LENGTH_SHORT).show();
         }
     }
 

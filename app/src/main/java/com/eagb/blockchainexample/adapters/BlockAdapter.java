@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class BlockAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
-    private List<BlockModel> blocks;
-    private Context mContext;
+    private final List<BlockModel> blocks;
+    private final Context mContext;
     private int lastPosition = -1;
 
     // Provide a suitable constructor

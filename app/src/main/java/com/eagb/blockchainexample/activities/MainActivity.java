@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressDialog progressDialog;
     private BlockChainManager blockChain;
     private SharedPreferencesManager prefs;
-    private boolean isEncryptionActivated, isDarkThemeActivated;
+    private boolean isEncryptionActivated;
+    private boolean isDarkThemeActivated;
     private AppUpdateManager appUpdateManager;
 
     private static final int UPDATE_REQUEST_CODE = 1000;
@@ -258,43 +259,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.action_pow:
-                PowFragment powFragment = PowFragment.newInstance();
-                powFragment.show(this.getSupportFragmentManager(), TAG_POW_DIALOG);
-                break;
-
-            case R.id.action_encrypt:
-                isEncryptionActivated = !item.isChecked();
-                item.setChecked(isEncryptionActivated);
-                if (item.isChecked()) {
-                    Toast.makeText(this, R.string.text_encryption_activated, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, R.string.text_encryption_deactivated, Toast.LENGTH_SHORT).show();
-                }
-                prefs.setEncryptionStatus(isEncryptionActivated);
-                return true;
-
-            case R.id.action_dark:
-                isDarkThemeActivated = !item.isChecked();
-                item.setChecked(isDarkThemeActivated);
-                prefs.setDarkTheme(isDarkThemeActivated);
-                Intent intent = this.getPackageManager().getLaunchIntentForPackage(this.getPackageName());
-                startActivity(intent);
-                finish();
-                return true;
-
-            case R.id.action_more:
-                MoreInfoFragment moreInfoFragment = MoreInfoFragment.newInstance();
-                moreInfoFragment.show(this.getSupportFragmentManager(), TAG_MORE_INFO_DIALOG);
-                break;
-
-            case R.id.action_exit:
-                finish();
-                break;
-
-            default:
-                return super.onOptionsItemSelected(item);
+        if (R.id.action_pow == item.getItemId()) {
+            PowFragment powFragment = PowFragment.newInstance();
+            powFragment.show(this.getSupportFragmentManager(), TAG_POW_DIALOG);
+        } else if (R.id.action_encrypt == item.getItemId()) {
+            isEncryptionActivated = !item.isChecked();
+            item.setChecked(isEncryptionActivated);
+            if (item.isChecked()) {
+                Toast.makeText(this, R.string.text_encryption_activated, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.text_encryption_deactivated, Toast.LENGTH_SHORT).show();
+            }
+            prefs.setEncryptionStatus(isEncryptionActivated);
+        } else if (R.id.action_dark == item.getItemId()) {
+            isDarkThemeActivated = !item.isChecked();
+            item.setChecked(isDarkThemeActivated);
+            prefs.setDarkTheme(isDarkThemeActivated);
+            Intent intent = this.getPackageManager().getLaunchIntentForPackage(this.getPackageName());
+            startActivity(intent);
+            finish();
+        } else if (R.id.action_more == item.getItemId()) {
+            MoreInfoFragment moreInfoFragment = MoreInfoFragment.newInstance();
+            moreInfoFragment.show(this.getSupportFragmentManager(), TAG_MORE_INFO_DIALOG);
+        } else if (R.id.action_exit == item.getItemId()) {
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

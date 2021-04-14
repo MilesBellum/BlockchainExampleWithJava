@@ -72,25 +72,20 @@ public class PowFragment extends DialogFragment implements View.OnClickListener 
 
     @Override
     public void onClick(@NonNull View view) {
-        switch (view.getId()){
-            case R.id.btn_close:
+        if (R.id.btn_close == view.getId()) {
+            dismiss();
+        } else if (R.id.btn_continue == view.getId() &&
+                viewBinding.edtSetPow.getText() != null) {
+            String pow = viewBinding.edtSetPow.getText().toString();
+            prefs.setPowValue(Integer.parseInt(pow));
+
+            if (getActivity() != null) {
+                Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
+                startActivity(intent);
+                getActivity().finish();
+            } else {
                 dismiss();
-                break;
-
-            case R.id.btn_continue:
-                if (viewBinding.edtSetPow.getText() != null) {
-                    String pow = viewBinding.edtSetPow.getText().toString();
-                    prefs.setPowValue(Integer.parseInt(pow));
-
-                    if (getActivity() != null) {
-                        Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
-                        startActivity(intent);
-                        getActivity().finish();
-                    } else {
-                        dismiss();
-                    }
-                }
-                break;
+            }
         }
     }
 
