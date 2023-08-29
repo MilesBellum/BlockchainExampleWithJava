@@ -15,6 +15,7 @@ import com.eagb.blockchainexample.databinding.ActivityMainBinding;
 import com.eagb.blockchainexample.databinding.ContentMainBinding;
 import com.eagb.blockchainexample.fragments.MoreInfoFragment;
 import com.eagb.blockchainexample.fragments.PowFragment;
+import com.eagb.blockchainexample.managers.AppManager;
 import com.eagb.blockchainexample.managers.SharedPreferencesManager;
 import com.eagb.blockchainexample.utils.CipherUtils;
 import com.eagb.blockchainexample.managers.BlockChainManager;
@@ -58,17 +59,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (powerManager != null) {
             isPowerSaveMode = powerManager.isPowerSaveMode();
         }
+
         if (isPowerSaveMode) {
             AppCompatDelegate.setDefaultNightMode(
                     AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         } else {
-            if (isDarkThemeActivated) {
-                AppCompatDelegate.setDefaultNightMode(
-                        AppCompatDelegate.MODE_NIGHT_YES);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(
-                        AppCompatDelegate.MODE_NIGHT_NO);
-            }
+            setDarkMode();
         }
 
         // Setting the Night mode - must be done before calling super()
@@ -108,7 +104,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewBindingContent.btnSendData.setOnClickListener(this);
     }
 
-    // Check a possible update from Play Store
+    private void setDarkMode() {
+        if (isDarkThemeActivated) {
+            AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
+
+    /**
+     * Checks a possible update from Play Store.
+     */
     private void checkUpdate() {
         // Creates instance of the manager
         appUpdateManager = AppUpdateManagerFactory.create(this);
@@ -127,7 +135,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    // If an update exist, request for the update
+    /**
+     * If an update exist, request for the update.
+     *
+     * @param appUpdateManager is the manager to start the flow for result
+     * [AppUpdateManager.startUpdateFlowForResult].
+     * @param appUpdateInfo gets the app info [AppUpdateInfo].
+     */
     private void startTheUpdate(@NonNull AppUpdateManager appUpdateManager, @NonNull AppUpdateInfo appUpdateInfo) {
         try {
             appUpdateManager.startUpdateFlowForResult(
@@ -152,7 +166,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resumeTheUpdate();
     }
 
-    // Continue with the update if one exists
+    /**
+     * Continue with the update if one exists.
+     */
     private void resumeTheUpdate() {
         appUpdateManager
                 .getAppUpdateInfo()
@@ -167,7 +183,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         });
     }
 
-    // Starting new request on a thread
+    /**
+     * Starting new request or block on a thread.
+     */
     private void startBlockChain() {
         // Setting the Progress Dialog
         showProgressDialog(getResources().getString(R.string.text_mining_blocks));
@@ -201,17 +219,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // Cleaning the EditText
                         viewBindingContent.editMessage.setText("");
                     } else {
-                        Toast.makeText(this, R.string.error_block_chain_corrupted, Toast.LENGTH_LONG).show();
+                        printErrorBlockchainCorrupted();
                     }
                 } else {
-                    Toast.makeText(this, R.string.error_empty_data, Toast.LENGTH_LONG).show();
+                    printErrorEmptyData();
                 }
 
                 cancelProgressDialog(progressDialog);
             } else {
-                Toast.makeText(this, R.string.error_something_wrong, Toast.LENGTH_LONG).show();
+                printErrorSomethingWrong();
             }
         });
+    }
+
+    private void printErrorBlockchainCorrupted() {
+        Toast.makeText(this, R.string.error_block_chain_corrupted, Toast.LENGTH_LONG).show();
+    }
+
+    private void printErrorEmptyData() {
+        Toast.makeText(this, R.string.error_empty_data, Toast.LENGTH_LONG).show();
+    }
+
+    private void printErrorSomethingWrong() {
+        Toast.makeText(this, R.string.error_something_wrong, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -222,7 +252,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    // Setting the Progress Dialog
+    /**
+     * Setting the Progress Dialog.
+     *
+     * @param loadingMessage is the message in [String].
+     */
     private void showProgressDialog(@NonNull String loadingMessage) {
         progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -260,27 +294,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (R.id.action_pow == item.getItemId()) {
-            PowFragment powFragment = PowFragment.newInstance();
-            powFragment.show(this.getSupportFragmentManager(), TAG_POW_DIALOG);
+            onPowOptionTapped();
         } else if (R.id.action_encrypt == item.getItemId()) {
-            isEncryptionActivated = !item.isChecked();
-            item.setChecked(isEncryptionActivated);
-            if (item.isChecked()) {
-                Toast.makeText(this, R.string.text_encryption_activated, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, R.string.text_encryption_deactivated, Toast.LENGTH_SHORT).show();
-            }
-            prefs.setEncryptionStatus(isEncryptionActivated);
+            onEncryptionOptionTapped(item);
         } else if (R.id.action_dark == item.getItemId()) {
-            isDarkThemeActivated = !item.isChecked();
-            item.setChecked(isDarkThemeActivated);
-            prefs.setDarkTheme(isDarkThemeActivated);
-            Intent intent = this.getPackageManager().getLaunchIntentForPackage(this.getPackageName());
-            startActivity(intent);
-            finish();
+            onDarkThemeOptionTapped(item);
         } else if (R.id.action_more == item.getItemId()) {
-            MoreInfoFragment moreInfoFragment = MoreInfoFragment.newInstance();
-            moreInfoFragment.show(this.getSupportFragmentManager(), TAG_MORE_INFO_DIALOG);
+            onMoreInfoOptionTapped();
         } else if (R.id.action_exit == item.getItemId()) {
             finish();
         }
@@ -288,4 +308,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
+    private void onPowOptionTapped() {
+        PowFragment powFragment = PowFragment.newInstance();
+        powFragment.show(this.getSupportFragmentManager(), TAG_POW_DIALOG);
+    }
+
+    private void onEncryptionOptionTapped(@NonNull MenuItem item) {
+        isEncryptionActivated = !item.isChecked();
+        item.setChecked(isEncryptionActivated);
+        if (item.isChecked()) {
+            Toast.makeText(this, R.string.text_encryption_activated, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.text_encryption_deactivated, Toast.LENGTH_SHORT).show();
+        }
+        prefs.setEncryptionStatus(isEncryptionActivated);
+    }
+
+    private void onDarkThemeOptionTapped(@NonNull MenuItem item) {
+        isDarkThemeActivated = !item.isChecked();
+        item.setChecked(isDarkThemeActivated);
+        prefs.setDarkTheme(isDarkThemeActivated);
+
+        AppManager appManager = new AppManager(this);
+        appManager.restartApp();
+    }
+
+    private void onMoreInfoOptionTapped() {
+        MoreInfoFragment moreInfoFragment = MoreInfoFragment.newInstance();
+        moreInfoFragment.show(this.getSupportFragmentManager(), TAG_MORE_INFO_DIALOG);
+    }
 }
