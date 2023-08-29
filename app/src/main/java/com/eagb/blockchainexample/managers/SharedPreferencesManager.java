@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 
 public class SharedPreferencesManager {
 
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
+    private final SharedPreferences sharedPreferences;
+    private final SharedPreferences.Editor editor;
     private static final String PREFERENCES_DATA = "eagb.blockchainexample";
     private static final String ENCRYPTION_STATUS = "encryption_status";
     private static final String DARK_THEME = "dark_theme";
