@@ -1,7 +1,6 @@
 package com.eagb.blockchainexample.activities;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -19,12 +18,12 @@ import com.eagb.blockchainexample.managers.AppManager;
 import com.eagb.blockchainexample.managers.SharedPreferencesManager;
 import com.eagb.blockchainexample.utils.CipherUtils;
 import com.eagb.blockchainexample.managers.BlockChainManager;
+import com.google.android.gms.tasks.Task;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
 import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.install.model.UpdateAvailability;
-import com.google.android.play.core.tasks.Task;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

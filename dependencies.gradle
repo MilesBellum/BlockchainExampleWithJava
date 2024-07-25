@@ -1,6 +1,6 @@
 ext {
-    versionCode = 8
-    versionName = "1.1.4"
+    versionCode = 9
+    versionName = "1.1.5"
 
     minSdkVersion = 23
     targetSdkVersion = 34
@@ -29,6 +29,8 @@ ext {
 
             testRunner: '1.5.2',
 
-            playCore: '1.10.3',
+            playAssetDelivery: '2.2.2',
+            playAppUpdate: '2.1.0',
+            playServicesTasks: '18.2.0',
     ]
 }
