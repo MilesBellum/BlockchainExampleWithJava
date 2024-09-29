@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 
 public class AppManager {
-
     private final Context context;
 
     public AppManager(Context context) {

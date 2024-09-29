@@ -20,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class MoreInfoFragment extends DialogFragment implements View.OnClickListener {
-
     private FragmentMoreInfoBinding viewBinding;
 
     private Context mContext;
@@ -52,7 +51,15 @@ public class MoreInfoFragment extends DialogFragment implements View.OnClickList
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setUpView();
+    }
+
+    /**
+     * Sets up the view.
+     */
+    private void setUpView() {
         String appVersion = "v." + BuildConfig.VERSION_NAME + " - Build " + BuildConfig.VERSION_CODE;
+
         viewBinding.txtAppVersion.setText(appVersion);
 
         viewBinding.btnClose.setOnClickListener(this);

@@ -15,7 +15,6 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.eagb.blockchainexample.managers.SharedPreferencesManager.DEFAULT_PROOF_OF_WORK;
 
 public class RestorePowShortcutActivity extends Activity {
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

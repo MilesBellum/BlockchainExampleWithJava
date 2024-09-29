@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import androidx.annotation.Nullable;
 
 public class BlockModel {
-
     private final int index;
     private int nonce;
     private final long timestamp;
@@ -14,6 +13,14 @@ public class BlockModel {
     private final String previousHash;
     private final String data;
 
+    /**
+     * Block model constructor.
+     *
+     * @param index is the index of the block.
+     * @param timestamp is the timestamp of the block.
+     * @param previousHash is the hash of the previous block.
+     * @param data is the data of the block.
+     */
     public BlockModel(int index, long timestamp, @Nullable String previousHash, @Nullable String data) {
         this.index = index;
         this.timestamp = timestamp;
@@ -24,32 +31,67 @@ public class BlockModel {
         hash = BlockModel.calculateHash(this);
     }
 
+    /**
+     * Getter of the index.
+     *
+     * @return the index of the block.
+     */
     public int getIndex() {
         return index;
     }
 
+    /**
+     * Getter of the nonce.
+     *
+     * @return the nonce of the block.
+     */
     public long getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * Getter of the hash.
+     *
+     * @return the hash of the block.
+     */
     public String getHash() {
         return hash;
     }
 
+    /**
+     * Getter of the previous hash.
+     *
+     * @return the previous hash of the block.
+     */
     public String getPreviousHash() {
         return previousHash;
     }
 
+    /**
+     * Getter of the data.
+     *
+     * @return the data of the block.
+     */
     public String getData() {
         return data;
     }
 
+    /**
+     * Getter of the nonce.
+     *
+     * @return the nonce of the block.
+     */
     private String str() {
         return index + timestamp + previousHash + data + nonce;
     }
 
-    // This is the process to find a hash with the exact
-    // number of leading zeros set by the user
+    /**
+     * Calculate the hash of the block. This is the process to find a hash with the exact
+     * number of leading zeros set by the user.
+     *
+     * @param block is the block to calculate the hash.
+     * @return the hash of the block.
+     */
     public static String calculateHash(@Nullable BlockModel block) {
         if (block != null) {
             MessageDigest messageDigest;
@@ -80,11 +122,13 @@ public class BlockModel {
         return null;
     }
 
-    // Proof-of-Work (mining blocks).
-    // Adding the number of zeros set by the user.
-    // The more zeros at the beginning of the hash, the more difficult
-    // it will be to find a hash with that request.
-    // The calculations will be done by the CPU. This process is called 'mining'
+    /**
+     * Mine the block. Proof-of-Work (mining blocks). Adding the number of zeros set by the user.
+     * The more zeros at the beginning of the hash, the more difficult it will be to find a hash
+     * with that request. The calculations will be done by the CPU. This process is called 'mining'.
+     *
+     * @param difficulty is the number of zeros at the beginning of the hash.
+     */
     public void mineBlock(int difficulty) {
         nonce = 0;
 
@@ -94,7 +138,12 @@ public class BlockModel {
         }
     }
 
-    // Adding zeros in a String to set more difficulty
+    /**
+     * Add zeros in a String to the hash to set more difficulty.
+     *
+     * @param length is the number of zeros to add.
+     * @return the hash with the added zeros.
+     */
     private String addZeros(int length) {
         StringBuilder builder = new StringBuilder();
 

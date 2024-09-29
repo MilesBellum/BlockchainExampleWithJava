@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class BlockAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
-
     private final List<BlockModel> blocks;
     private final Context mContext;
     private int lastPosition = -1;
@@ -44,17 +43,27 @@ public class BlockAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     public void onBindViewHolder(@NonNull final RecyclerViewHolder viewHolder, int position) {
         // Use the provided View Holder on the onCreateViewHolder method
         // to populate the current row on the RecyclerView
-        viewHolder.txtIndex.setText(String.format(
-                mContext.getString(R.string.title_block_number), blocks.get(position).getIndex()));
-        viewHolder.txtPreviousHash.setText(blocks.get(position).getPreviousHash() != null ?
-                blocks.get(position).getPreviousHash() : "Null");
-        viewHolder.txtTimestamp.setText(String.valueOf(new Date(blocks.get(position).getTimestamp())));
-        viewHolder.txtData.setText(blocks.get(position).getData());
-        viewHolder.txtHash.setText(blocks.get(position).getHash());
+        assert blocks != null;
+        BlockModel block = blocks.get(position);
+        String previousHash = blocks.get(position).getPreviousHash();
+
+        viewHolder.txtIndex.setText(
+                String.format(mContext.getString(R.string.title_block_number), block.getIndex())
+        );
+        viewHolder.txtPreviousHash.setText(previousHash != null ? previousHash : "Null");
+        viewHolder.txtTimestamp.setText(String.valueOf(new Date(block.getTimestamp())));
+        viewHolder.txtData.setText(block.getData());
+        viewHolder.txtHash.setText(block.getHash());
 
         setAnimation(viewHolder.itemView, position);
     }
 
+    /**
+     * Here is the key method to apply the animation.
+     *
+     * @param viewToAnimate view to be animated
+     * @param position position of the view
+     */
     private void setAnimation(View viewToAnimate, int position) {
         // If the bound view wasn't previously displayed on screen, it's animated
         if (position > lastPosition) {

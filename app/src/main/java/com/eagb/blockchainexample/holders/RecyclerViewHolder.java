@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerViewHolder extends RecyclerView.ViewHolder {
-
     public TextView txtIndex;
     public TextView txtPreviousHash;
     public TextView txtTimestamp;

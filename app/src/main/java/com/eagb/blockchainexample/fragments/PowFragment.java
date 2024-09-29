@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class PowFragment extends DialogFragment implements View.OnClickListener {
-
     private FragmentPowBinding viewBinding;
 
     private Context mContext;
@@ -51,6 +50,13 @@ public class PowFragment extends DialogFragment implements View.OnClickListener 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setUpView();
+    }
+
+    /**
+     * Sets up the view.
+     */
+    private void setUpView() {
         prefs = new SharedPreferencesManager(mContext);
         viewBinding.edtSetPow.setText(String.valueOf(prefs.getPowValue()));
         viewBinding.btnClose.setOnClickListener(this);
@@ -79,8 +85,8 @@ public class PowFragment extends DialogFragment implements View.OnClickListener 
             String pow = viewBinding.edtSetPow.getText().toString();
             prefs.setPowValue(Integer.parseInt(pow));
 
-            if (getActivity() != null) {
-                Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
+            Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
+            if (getActivity() != null && intent != null) {
                 startActivity(intent);
                 getActivity().finish();
             } else {

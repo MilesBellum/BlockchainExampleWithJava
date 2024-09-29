@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class BlockChainManager {
-
     private final int difficulty;
     private final List<BlockModel> blocks;
     public final BlockAdapter adapter;
@@ -22,7 +21,12 @@ public class BlockChainManager {
 
         // Creating the 'Genesis block' (first block)
         blocks = new ArrayList<>();
-        BlockModel block = new BlockModel(0, System.currentTimeMillis(), null, "Genesis Block");
+        BlockModel block = new BlockModel(
+                0,
+                System.currentTimeMillis(),
+                null,
+                "Genesis Block"
+        );
         block.mineBlock(difficulty);
         blocks.add(block);
 
@@ -34,7 +38,12 @@ public class BlockChainManager {
         return blocks.get(blocks.size() - 1);
     }
 
-    // Broadcast block
+    /**
+     * Broadcast block. Creating a new block.
+     *
+     * @param data is the data to broadcast.
+     * @return new block.
+     */
     public BlockModel newBlock(String data) {
         BlockModel latestBlock = latestBlock();
 
@@ -42,7 +51,11 @@ public class BlockChainManager {
                 latestBlock.getHash(), data);
     }
 
-    // Requesting Proof-of-Work
+    /**
+     * Requesting Proof-of-Work. Add block to the block chain.
+     *
+     * @param block is the block to add.
+     */
     public void addBlock(BlockModel block) {
         if (block != null) {
             block.mineBlock(difficulty);
@@ -50,7 +63,11 @@ public class BlockChainManager {
         }
     }
 
-    // Validating first block
+    /**
+     * Validating first block. Validating first block.
+     *
+     * @return true if the first block is valid. Otherwise false.
+     */
     private boolean isFirstBlockValid() {
         BlockModel firstBlock = blocks.get(0);
 
@@ -66,7 +83,13 @@ public class BlockChainManager {
                 BlockModel.calculateHash(firstBlock).equals(firstBlock.getHash());
     }
 
-    // Validate new block
+    /**
+     * Validate new block.
+     *
+     * @param newBlock is the new block to validate.
+     * @param previousBlock is the previous block.
+     * @return true if the new block is valid. Otherwise false.
+     */
     private boolean isValidNewBlock(@Nullable BlockModel newBlock, @Nullable BlockModel previousBlock) {
         if (newBlock != null  &&  previousBlock != null) {
             if (previousBlock.getIndex() + 1 != newBlock.getIndex()) {
@@ -85,7 +108,11 @@ public class BlockChainManager {
         return false;
     }
 
-    // Validating current block
+    /**
+     * Validating current block and block chain.
+     *
+     * @return true if the block chain is valid. Otherwise false.
+     */
     public boolean isBlockChainValid() {
         if (!isFirstBlockValid()) {
             return false;
