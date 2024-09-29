@@ -1,5 +1,6 @@
 package com.eagb.blockchainexample.activities;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.IntentSender;
 import android.os.Bundle;
@@ -33,7 +34,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
     private ContentMainBinding viewBindingContent;
 
     private ProgressDialog progressDialog;
@@ -106,10 +106,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setDarkMode() {
         if (isDarkThemeActivated) {
             AppCompatDelegate.setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_YES);
+                    AppCompatDelegate.MODE_NIGHT_YES
+            );
         } else {
             AppCompatDelegate.setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_NO);
+                    AppCompatDelegate.MODE_NIGHT_NO
+            );
         }
     }
 
@@ -141,7 +143,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * [AppUpdateManager.startUpdateFlowForResult].
      * @param appUpdateInfo gets the app info [AppUpdateInfo].
      */
-    private void startTheUpdate(@NonNull AppUpdateManager appUpdateManager, @NonNull AppUpdateInfo appUpdateInfo) {
+    private void startTheUpdate(
+            @NonNull AppUpdateManager appUpdateManager,
+            @NonNull AppUpdateInfo appUpdateInfo
+    ) {
         try {
             appUpdateManager.startUpdateFlowForResult(
                     // Pass the intent that is returned by 'getAppUpdateInfo()'
@@ -185,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Starting new request or block on a thread.
      */
+    @SuppressLint("NotifyDataSetChanged")
     private void startBlockChain() {
         // Setting the Progress Dialog
         showProgressDialog(getResources().getString(R.string.text_mining_blocks));
@@ -208,13 +214,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Toast.makeText(this, R.string.error_something_wrong, Toast.LENGTH_LONG).show();
                         }
                     }
-                    viewBindingContent.recyclerContent.scrollToPosition(blockChain.adapter.getItemCount() - 1);
+                    viewBindingContent.recyclerContent.smoothScrollToPosition(blockChain.adapter.getItemCount() - 1);
 
                     // Validate block's data
                     System.out.println(getResources().getString(R.string.log_block_chain_valid, blockChain.isBlockChainValid()));
                     if (blockChain.isBlockChainValid()) {
                         // Preparing data to insert to RecyclerView
-                        viewBindingContent.recyclerContent.getAdapter().notifyDataSetChanged();
+                        blockChain.adapter.notifyItemInserted(blockChain.adapter.getItemCount() - 1);
                         // Cleaning the EditText
                         viewBindingContent.editMessage.setText("");
                     } else {
@@ -231,14 +237,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * Prints an error message when the block chain is corrupted.
+     */
     private void printErrorBlockchainCorrupted() {
         Toast.makeText(this, R.string.error_block_chain_corrupted, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Prints an error message when the EditText is empty.
+     */
     private void printErrorEmptyData() {
         Toast.makeText(this, R.string.error_empty_data, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Prints an error message when something goes wrong.
+     */
     private void printErrorSomethingWrong() {
         Toast.makeText(this, R.string.error_something_wrong, Toast.LENGTH_LONG).show();
     }
@@ -257,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * @param loadingMessage is the message in [String].
      */
     private void showProgressDialog(@NonNull String loadingMessage) {
-        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage(loadingMessage);
         progressDialog.setCancelable(false);
@@ -265,6 +280,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressDialog.show();
     }
 
+    /**
+     * Canceling the Progress Dialog.
+     *
+     * @param progressDialog is the Progress Dialog.
+     */
     private void cancelProgressDialog(@Nullable ProgressDialog progressDialog) {
         if (progressDialog != null) {
             progressDialog.cancel();
@@ -307,11 +327,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Opening the PoW dialog.
+     */
     private void onPowOptionTapped() {
         PowFragment powFragment = PowFragment.newInstance();
         powFragment.show(this.getSupportFragmentManager(), TAG_POW_DIALOG);
     }
 
+    /**
+     * Setting the encryption status.
+     *
+     * @param item is the menu item.
+     */
     private void onEncryptionOptionTapped(@NonNull MenuItem item) {
         isEncryptionActivated = !item.isChecked();
         item.setChecked(isEncryptionActivated);
@@ -323,6 +351,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         prefs.setEncryptionStatus(isEncryptionActivated);
     }
 
+    /**
+     * Setting the dark theme status.
+     *
+     * @param item is the menu item.
+     */
     private void onDarkThemeOptionTapped(@NonNull MenuItem item) {
         isDarkThemeActivated = !item.isChecked();
         item.setChecked(isDarkThemeActivated);
@@ -332,6 +365,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         appManager.restartApp();
     }
 
+    /**
+     * Opening the More Info dialog.
+     */
     private void onMoreInfoOptionTapped() {
         MoreInfoFragment moreInfoFragment = MoreInfoFragment.newInstance();
         moreInfoFragment.show(this.getSupportFragmentManager(), TAG_MORE_INFO_DIALOG);

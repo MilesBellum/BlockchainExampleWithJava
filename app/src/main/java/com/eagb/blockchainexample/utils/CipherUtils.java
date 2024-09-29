@@ -18,12 +18,16 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 public class CipherUtils {
-
     private static final String PASSWORD = "Th15-15-4-P455w0rd";
     private static final String ALGORITHM = "DES";
 
-    // This method is used to encrypt the message, but this feature is not necessary in Blockchain,
-    // so I just added this to keep the example more interesting
+    /**
+     * This method is used to encrypt the message, but this feature is not necessary in Blockchain,
+     * so I just added this to keep the example more interesting.
+     *
+     * @param value is the message to encrypt
+     * @return the encrypted message.
+     */
     public static String encryptIt(@NonNull String value) {
         try {
             DESKeySpec keySpec = new DESKeySpec(PASSWORD.getBytes(StandardCharsets.UTF_8));
@@ -45,7 +49,13 @@ public class CipherUtils {
         return value;
     }
 
-    // This method is not used in this app, but it's not bad to know how to decrypt the text
+    /**
+     * This method is used to decrypt the message, but this feature is not necessary in Blockchain.
+     * This method is not used in this app, but it's not bad to know how to decrypt the text.
+     *
+     * @param value is the message to decrypt.
+     * @return the decrypted message.
+     */
     public static String decryptIt(@NonNull String value) {
         try {
             DESKeySpec keySpec = new DESKeySpec(PASSWORD.getBytes(StandardCharsets.UTF_8));

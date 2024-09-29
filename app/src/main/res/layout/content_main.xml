@@ -9,67 +9,81 @@
     tools:context=".activities.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/recycler_content"
+        android:scrollbars="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/input_container" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/input_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:layout_margin="@dimen/content_margin"
+        app:cardElevation="@dimen/card_elevation"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/edit_text_margin">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/edit_message"
+                android:hint="@string/text_write_your_message"
+                android:textColorHint="@color/textHintColor"
+                android:textColor="@color/textColor"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAlignment="textStart"
+                android:textStyle="normal"
+                android:maxLines="5"
+                android:background="@android:color/transparent" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_send_data"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/ic_send_24dp"
+                android:layout_marginStart="@dimen/edit_text_margin"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/cd_send_data" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!--LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/recycler_content"
-                android:scrollbars="vertical" />
-
-        </ScrollView>
-
-        <androidx.cardview.widget.CardView
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:layout_margin="@dimen/content_margin"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius">
+            android:id="@+id/recycler_content"
+            android:scrollbars="vertical" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/edit_text_margin">
+    </ScrollView>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/edit_message"
-                    android:hint="@string/text_write_your_message"
-                    android:textColorHint="@color/textHintColor"
-                    android:textColor="@color/textColor"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textAlignment="textStart"
-                    android:textStyle="normal"
-                    android:maxLines="5"
-                    android:background="@android:color/transparent" />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_send_data"
-                    android:background="@android:color/transparent"
-                    app:srcCompat="@drawable/ic_send_24dp"
-                    android:layout_marginStart="@dimen/edit_text_margin"
-                    android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/cd_send_data" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
+    </LinearLayout-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
