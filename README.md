@@ -11,12 +11,11 @@ Remember, you will need getting the last API version and updates. This project r
 #### build.gradle
 ```gradle
 dependencies {
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
-    implementation 'com.google.android.play:core:1.10.3'
 }
 ```
 
