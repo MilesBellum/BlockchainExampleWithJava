@@ -1,11 +1,11 @@
 ext {
-    versionCode = 10
-    versionName = "1.1.6"
+    versionCode = 11
+    versionName = "1.1.7"
 
     minSdkVersion = 26
     targetSdkVersion = 34
     compileSdkVersion = 34
-    buildToolsVersion = "29.0.2"
+    buildToolsVersion = "34.0.0"
     nameSpace = "com.eagb.blockchainexample"
 
     versions = [
@@ -14,9 +14,9 @@ ext {
             constraintLayout: '2.1.4',
             coordinatorLayout: '1.2.0',
 
-            espressoCore: '3.5.1',
+            espressoCore: '3.6.1',
 
-            fragment: '1.6.1',
+            fragment: '1.7.1',
 
             junit: '4.13.2',
 
@@ -24,13 +24,13 @@ ext {
 
             legacySupport: '1.0.0',
 
-            material: '1.9.0',
+            material: '1.12.0',
             material3: '1.0.0-beta02',
-
-            testRunner: '1.5.2',
 
             playAssetDelivery: '2.2.2',
             playAppUpdate: '2.1.0',
             playServicesTasks: '18.2.0',
+
+            testRunner: '1.6.2',
     ]
 }

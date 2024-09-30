@@ -33,6 +33,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ContentMainBinding viewBindingContent;
 
@@ -49,6 +51,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        managePowerTheme();
+
+        // Setting the Night mode - must be done before calling super()
+        super.onCreate(savedInstanceState);
+
+        setUpView();
+    }
+
+    /**
+     * Managing the power theme.
+     */
+    private void managePowerTheme() {
         prefs = new SharedPreferencesManager(this);
         isDarkThemeActivated = prefs.isDarkTheme();
 
@@ -65,9 +79,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             setDarkMode();
         }
+    }
 
-        // Setting the Night mode - must be done before calling super()
-        super.onCreate(savedInstanceState);
+    /**
+     * Setting the dark mode.
+     */
+    private void setDarkMode() {
+        if (isDarkThemeActivated) {
+            AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_YES
+            );
+        } else {
+            AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_NO
+            );
+        }
+    }
+
+    /**
+     * Setting up the view.
+     */
+    private void setUpView() {
         ActivityMainBinding viewBinding = ActivityMainBinding.inflate(getLayoutInflater());
         viewBindingContent = ContentMainBinding.bind(viewBinding.contentMain.getRoot());
         setContentView(viewBinding.getRoot());
@@ -84,35 +116,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Use a linear layout manager
         viewBindingContent.recyclerContent.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        // Setting the Progress Dialog
-        showProgressDialog(getResources().getString(R.string.text_creating_block_chain));
-
-        // Starting BlockChain request on a thread
-        new Thread(() -> runOnUiThread(() -> {
-            // Initializing BlockChain...
-            // PROOF_OF_WORK = difficulty.
-            // Given some difficulty, the CPU will has to find a hash for the block
-            // starting with a given number of zeros.
-            // More Proof-of-Work will be harder to mine and will take longer time.
-            // Watch out!
-            blockChain = new BlockChainManager(this, prefs.getPowValue());
-            viewBindingContent.recyclerContent.setAdapter(blockChain.adapter);
-            cancelProgressDialog(progressDialog);
-        })).start();
-
         viewBindingContent.btnSendData.setOnClickListener(this);
-    }
 
-    private void setDarkMode() {
-        if (isDarkThemeActivated) {
-            AppCompatDelegate.setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_YES
-            );
-        } else {
-            AppCompatDelegate.setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_NO
-            );
-        }
+        // Starting Blockchain
+        startBlockChain();
     }
 
     /**
@@ -134,6 +141,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+    }
+
+    /**
+     * Starting BlockChain.
+     */
+    private void startBlockChain() {
+        // Setting the Progress Dialog
+        showProgressDialog(getResources().getString(R.string.text_creating_block_chain));
+
+        // Starting BlockChain request on a thread
+        new Thread(() -> runOnUiThread(() -> {
+            // Initializing BlockChain...
+            // PROOF_OF_WORK = difficulty.
+            // Given some difficulty, the CPU will has to find a hash for the block
+            // starting with a given number of zeros.
+            // More Proof-of-Work will be harder to mine and will take longer time.
+            // Watch out!
+            blockChain = new BlockChainManager(this, prefs.getPowValue());
+            viewBindingContent.recyclerContent.setAdapter(blockChain.adapter);
+            cancelProgressDialog(progressDialog);
+        })).start();
     }
 
     /**
@@ -178,8 +206,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .getAppUpdateInfo()
                 .addOnSuccessListener(
                         appUpdateInfo -> {
-                            if (appUpdateInfo.updateAvailability()
-                                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                            if (appUpdateInfo.updateAvailability() ==
+                                    UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
                                 // If an in-app update is already running, resume the update.
                                 startTheUpdate(appUpdateManager, appUpdateInfo);
                             }
@@ -188,10 +216,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * Starting new request or block on a thread.
+     * Requesting new block from Blockchain.
      */
     @SuppressLint("NotifyDataSetChanged")
-    private void startBlockChain() {
+    private void requestNewBlockFromBlockChain() {
         // Setting the Progress Dialog
         showProgressDialog(getResources().getString(R.string.text_mining_blocks));
 
@@ -200,32 +228,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String message = viewBindingContent.editMessage.getText().toString();
 
                 if (!message.isEmpty()) {
-
                     // Verification if encryption is activated
-                    if (!isEncryptionActivated) {
-                        // Broadcast data
-                        blockChain.addBlock(blockChain.newBlock(message));
-                    } else {
-                        try {
-                            // Broadcast data
-                            blockChain.addBlock(blockChain.newBlock(CipherUtils.encryptIt(message).trim()));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Toast.makeText(this, R.string.error_something_wrong, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    viewBindingContent.recyclerContent.smoothScrollToPosition(blockChain.adapter.getItemCount() - 1);
+                    verifyEncryption(message);
 
                     // Validate block's data
-                    System.out.println(getResources().getString(R.string.log_block_chain_valid, blockChain.isBlockChainValid()));
-                    if (blockChain.isBlockChainValid()) {
-                        // Preparing data to insert to RecyclerView
-                        blockChain.adapter.notifyItemInserted(blockChain.adapter.getItemCount() - 1);
-                        // Cleaning the EditText
-                        viewBindingContent.editMessage.setText("");
-                    } else {
-                        printErrorBlockchainCorrupted();
-                    }
+                    validateBlockData();
                 } else {
                     printErrorEmptyData();
                 }
@@ -235,6 +242,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 printErrorSomethingWrong();
             }
         });
+    }
+
+    /**
+     * Verify if the encryption is activated.
+     *
+     * @param message is the message to broadcast.
+     */
+    private void verifyEncryption(@NotNull String message) {
+        if (!isEncryptionActivated) {
+            // Broadcast data
+            blockChain.addBlock(blockChain.newBlock(message));
+        } else {
+            try {
+                // Broadcast data
+                blockChain.addBlock(blockChain.newBlock(CipherUtils.encryptIt(message).trim()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, R.string.error_something_wrong, Toast.LENGTH_LONG).show();
+            }
+        }
+        viewBindingContent.recyclerContent.smoothScrollToPosition(blockChain.adapter.getItemCount() - 1);
+    }
+
+    /**
+     * Validating block's data.
+     */
+    private void validateBlockData() {
+        System.out.println(getResources().getString(R.string.log_block_chain_valid, blockChain.isBlockChainValid()));
+        if (blockChain.isBlockChainValid()) {
+            // Preparing data to insert to RecyclerView
+            blockChain.adapter.notifyItemInserted(blockChain.adapter.getItemCount() - 1);
+            // Cleaning the EditText
+            viewBindingContent.editMessage.setText("");
+        } else {
+            printErrorBlockchainCorrupted();
+        }
     }
 
     /**
@@ -262,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(@NonNull View view) {
         if (view.getId() == R.id.btn_send_data) {
             // Start new request on a UI thread
-            startBlockChain();
+            requestNewBlockFromBlockChain();
         }
     }
 
